@@ -42,31 +42,53 @@ At a high level, the project includes:
 ## Architecture
 
 ```text
-User Browser
-    |
-    | HTTPS
-    v
-Domain / DNS
-    |
-    v
-Cloud VM
-    |
-    v
-UFW Firewall
-    |
-    v
-Nginx Reverse Proxy
-    |
-    v
-Nextcloud Application Container
-    |
-    +----------------------+
-    |                      |
-    v                      v
-MariaDB Database      Persistent Storage
-    |
-    v
-Backup Workflow
+                           ┌──────────────────────┐
+                           │      End User        │
+                           │  Browser / HTTPS     │
+                           └──────────┬───────────┘
+                                      │
+                                      v
+                           ┌──────────────────────┐
+                           │      DNS Provider    │
+                           │    cloudarmor.me     │
+                           └──────────┬───────────┘
+                                      │
+                                      v
+                           ┌──────────────────────┐
+                           │  DigitalOcean VM     │
+                           │   Ubuntu Server      │
+                           └──────────┬───────────┘
+                                      │
+                    ┌─────────────────┼─────────────────┐
+                    v                 v                 v
+          ┌────────────────┐ ┌────────────────┐ ┌────────────────┐
+          │      UFW       │ │ SSH Hardening  │ │ SSL/TLS Certs  │
+          │   Firewall     │ │ Admin Access   │ │ HTTPS Security │
+          └────────────────┘ └────────────────┘ └────────────────┘
+                                      │
+                                      v
+                           ┌──────────────────────┐
+                           │  Nginx Reverse Proxy │
+                           └──────────┬───────────┘
+                                      │
+                                      v
+                           ┌──────────────────────┐
+                           │      Nextcloud       │
+                           │ Application Container│
+                           └──────────┬───────────┘
+                                      │
+                    ┌─────────────────┴─────────────────┐
+                    v                                   v
+          ┌──────────────────────┐          ┌──────────────────────┐
+          │      MariaDB         │          │ Persistent Storage   │
+          │ Application Database │          │ User Files / Config  │
+          └──────────────────────┘          └──────────────────────┘
+                                      │
+                                      v
+                           ┌──────────────────────┐
+                           │    Backup Script     │
+                           │ DB / App Recovery    │
+                           └──────────────────────┘
 ```
 
 ---
@@ -595,8 +617,6 @@ CloudArmor applies layered security controls across the cloud, operating system,
 
 ## Security Best Practices
 
-Before publishing this project publicly:
-
 - Remove all real credentials
 - Remove real public IP addresses
 - Remove private SSH keys
@@ -714,35 +734,6 @@ docker logs cloudarmor-nginx
 
 ---
 
-## Recommended Screenshots
-
-Add screenshots to the `screenshots/` folder and reference them in this README.
-
-Suggested screenshots:
-
-- Cloud VM dashboard
-- DNS A record configuration
-- SSH hardening configuration
-- UFW status output
-- Docker containers running
-- Nginx reverse proxy configuration
-- Browser showing HTTPS lock
-- Nextcloud login page
-- Nextcloud dashboard
-- Successful file upload
-- MariaDB container status
-- Backup script output
-
-Example Markdown:
-
-```markdown
-![Nextcloud Login](screenshots/nextcloud-login.png)
-![UFW Status](screenshots/ufw-status.png)
-![Docker Containers](screenshots/docker-containers.png)
-```
-
----
-
 ## Lessons Learned
 
 This project reinforced that cloud infrastructure is more than launching a server. A working deployment requires multiple layers to function together correctly:
@@ -776,27 +767,6 @@ Planned improvements include:
 - Add cloud object storage for backups
 - Add restore testing documentation
 - Add centralized logging
-
----
-
-## Resume Summary
-
-**CloudArmor – Secure Cloud Infrastructure Capstone**
-
-- Deployed a secure cloud-hosted Nextcloud collaboration platform on a Linux VM using Docker, MariaDB, Nginx reverse proxying, DNS configuration, and SSL/TLS encryption.
-- Hardened server access with SSH security controls and UFW firewall rules to restrict inbound traffic to required administrative and web services.
-- Implemented MariaDB as the application database backend and created backup procedures to support data recovery and operational continuity.
-- Documented architecture, deployment workflow, security controls, backup process, troubleshooting steps, and validation testing for a full-stack infrastructure capstone project.
-
----
-
-## Interview Explanation
-
-> CloudArmor is a secure cloud infrastructure capstone where I deployed a self-hosted Nextcloud collaboration platform on a Linux-based cloud VM. The stack used Docker, MariaDB, Nginx reverse proxying, DNS routing, SSL/TLS encryption, UFW firewall rules, SSH hardening, and backup scripting.
->
-> The goal was not just to make the application work, but to build it like a real infrastructure project. I had to think through public access, secure remote administration, reverse proxy routing, database persistence, firewall exposure, and recovery planning.
->
-> The biggest lesson was understanding how each layer depends on the others. DNS had to point to the server correctly, SSL depended on the domain resolving, Nginx had to route traffic to the right container, MariaDB had to remain available for Nextcloud, and the firewall had to allow only the correct traffic. This gave me practical experience with cloud hosting, Linux administration, Docker, networking, and security controls.
 
 ---
 
