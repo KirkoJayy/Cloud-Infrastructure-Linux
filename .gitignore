@@ -1,0 +1,13 @@
+.env
+*.key
+*.pem
+id_rsa
+id_ed25519
+secrets/
+backups/
+*.sql
+*.tar
+*.tar.gz
+*.zip
+.DS_Store
+__pycache__/
