@@ -270,45 +270,6 @@ sudo systemctl restart ssh
 
 ---
 
-## Recommended Repository Structure
-
-```text
-CloudArmor/
-│
-├── README.md
-├── docker-compose.yml
-├── .env.example
-├── .gitignore
-│
-├── nginx/
-│   └── default.conf
-│
-├── scripts/
-│   ├── backup-db.sh
-│   ├── restore-db.sh
-│   └── health-check.sh
-│
-├── docs/
-│   ├── architecture.md
-│   ├── deployment-guide.md
-│   ├── security-model.md
-│   ├── backup-restore-runbook.md
-│   └── troubleshooting.md
-│
-├── diagrams/
-│   └── architecture.png
-│
-└── screenshots/
-    ├── nextcloud-login.png
-    ├── nextcloud-dashboard.png
-    ├── ssl-enabled.png
-    ├── ufw-status.png
-    ├── docker-containers.png
-    └── backup-output.png
-```
-
----
-
 ## Environment Configuration
 
 Sensitive values should be stored in a local `.env` file.
